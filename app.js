@@ -19,6 +19,32 @@ async function loadProducts() {
 
         const products = manufacturer?.products || [];
 
+        const categories = manufacturer?.categories || [];
+        const categoriesGrid = document.getElementById("categories-grid");
+
+        if (categoriesGrid) {
+            if (categories.length === 0) {
+                const notice = document.createElement("p");
+                notice.className = "notice";
+                notice.textContent = "Категории готовятся к публикации.";
+                categoriesGrid.append(notice);
+            } else {
+                categories.forEach(category => {
+                    const button = document.createElement("button");
+                    button.className = "category-button";
+                    button.textContent = category.name;
+                    button.type = "button";
+                    button.addEventListener("click", () => {
+                        document.querySelectorAll(".category-button")
+                            .forEach(b => b.classList.remove("active"));
+                        button.classList.add("active");
+                    });
+                    categoriesGrid.append(button);
+                });
+            }
+        }
+
+
         if (products.length === 0) {
             message.textContent =
                 "Каталог ZPCH готовится к публикации. " +
