@@ -1,0 +1,11 @@
+.env
+.env.*
+*.pem
+*.key
+__pycache__/
+.venv/
+.DS_Store
+
+# Локальные резервные копии
+*_backup.html
+*_before_*.html

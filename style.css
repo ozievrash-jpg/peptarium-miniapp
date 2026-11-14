@@ -1,0 +1,238 @@
+:root {
+    --bg: #071820;
+    --surface: #102a35;
+    --surface-light: #173743;
+    --accent: #50d8cf;
+    --text: #ffffff;
+    --muted: #a9bdc5;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont,
+                 "Segoe UI", Arial, sans-serif;
+}
+
+header {
+    padding: 38px 20px 30px;
+    text-align: center;
+    background: linear-gradient(
+        145deg, #102d38, #071820
+    );
+    border-bottom: 1px solid #20424d;
+}
+
+h1 {
+    margin: 0;
+    color: var(--accent);
+    letter-spacing: 3px;
+    font-size: 30px;
+}
+
+.subtitle {
+    color: var(--muted);
+    margin-top: 12px;
+    font-size: 14px;
+}
+
+main {
+    max-width: 900px;
+    margin: auto;
+    padding: 28px 18px;
+}
+
+main h2 {
+    font-size: 21px;
+    margin-bottom: 20px;
+}
+
+.brand {
+    background: var(--surface);
+    padding: 25px;
+    border: 1px solid #28505b;
+    border-radius: 18px;
+    margin-top: 20px;
+    transition: transform 0.2s;
+}
+
+.brand:hover {
+    transform: translateY(-3px);
+    background: var(--surface-light);
+}
+
+.brand h2 {
+    color: var(--accent);
+    margin-top: 0;
+}
+
+.notice {
+    color: var(--muted);
+    line-height: 1.7;
+    font-size: 14px;
+}
+
+@media (max-width: 480px) {
+    h1 {
+        font-size: 26px;
+    }
+
+    header {
+        padding: 30px 16px;
+    }
+
+    .brand {
+        padding: 20px;
+    }
+}
+
+.search-box {
+    margin-bottom: 30px;
+}
+
+.search-box input {
+    width: 100%;
+    padding: 16px 18px;
+    border: 1px solid #28505b;
+    border-radius: 14px;
+    background: #102a35;
+    color: #ffffff;
+    font-size: 16px;
+    outline: none;
+}
+
+.search-box input:focus {
+    border-color: #50d8cf;
+}
+
+.search-box input::placeholder {
+    color: #a9bdc5;
+}
+
+.brand-link {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+    cursor: pointer;
+}
+
+.brand-link:focus-visible {
+    outline: 2px solid #50d8cf;
+    outline-offset: 4px;
+}
+
+.back-link {
+    display: inline-block;
+    margin-bottom: 24px;
+    color: #50d8cf;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.back-link:hover {
+    text-decoration: underline;
+}
+
+/* Карточки продукции PEPTARIUM */
+
+.products-grid {
+    display: grid;
+    grid-template-columns: repeat(
+        auto-fill, minmax(240px, 1fr)
+    );
+    gap: 18px;
+    margin-top: 24px;
+}
+
+.product-card {
+    background: var(--surface);
+    border: 1px solid #28505b;
+    border-radius: 18px;
+    overflow: hidden;
+}
+
+.product-image {
+    height: 190px;
+    background: #173743;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 48px;
+}
+
+.product-info {
+    padding: 20px;
+}
+
+.product-title {
+    font-size: 18px;
+    font-weight: 600;
+    margin: 0 0 10px;
+}
+
+.product-description {
+    color: var(--muted);
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+.product-status {
+    display: inline-block;
+    margin-top: 12px;
+    padding: 7px 12px;
+    border-radius: 8px;
+    background: #24404a;
+    color: #a9bdc5;
+    font-size: 12px;
+}
+
+
+/* Улучшенный дизайн карточек */
+
+.product-card {
+    transition: transform 0.2s ease,
+                border-color 0.2s ease;
+}
+
+.product-card:hover {
+    transform: translateY(-4px);
+    border-color: #50d8cf;
+}
+
+.product-image {
+    height: 220px;
+    background: linear-gradient(
+        145deg,
+        #204653,
+        #0a202a
+    );
+    border-bottom: 1px solid #28505b;
+}
+
+.product-info {
+    padding: 22px;
+}
+
+.product-title {
+    color: #ffffff;
+    line-height: 1.4;
+}
+
+.product-status {
+    line-height: 1.5;
+}
+
+@media (max-width: 480px) {
+    .products-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .product-image {
+        height: 200px;
+    }
+}
