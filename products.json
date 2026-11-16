@@ -185,7 +185,8 @@
               "packaging": "5 по 10мг",
               "image": "images/products/tg-b7962d9090d222515e28.jpg"
             }
-          ]
+          ],
+          "hidden": true
         }
       ]
     }
