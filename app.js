@@ -1,85 +1,183 @@
-async function loadProducts() {
-    const grid = document.getElementById("products-grid");
-    const message = document.getElementById("catalog-message");
+// PEPTARIUM: каталог ZPHC. Варианты и пути к фото берутся из products.json.
+(function () {
+  "use strict";
 
-    if (!grid || !message) return;
+  const grid = document.getElementById("products-grid");
+  const message = document.getElementById("catalog-message");
+  const categoryContainer = document.getElementById("categories-grid");
+  const searchInput = document.getElementById("catalog-search-input");
+  if (!grid || !message || !categoryContainer || !searchInput) return;
 
-    try {
-        const response = await fetch("products.json");
+  const state = { products: [], category: "all", search: "" };
+  const cards = new Map();
 
-        if (!response.ok) {
-            throw new Error("Ошибка загрузки каталога");
-        }
+  function textEl(tag, className, value) {
+    const element = document.createElement(tag);
+    if (className) element.className = className;
+    element.textContent = value;
+    return element;
+  }
 
-        const data = await response.json();
+  function formatComposition(items) {
+    if (!Array.isArray(items) || !items.length) return "";
+    return items.map(item => `${item.name} — ${item.mg} мг`).join(" · ");
+  }
 
-        const manufacturer = data.manufacturers.find(
-            item => item.id === "zpch"
-        );
-
-        const products = manufacturer?.products || [];
-
-        const categories = manufacturer?.categories || [];
-        const categoriesGrid = document.getElementById("categories-grid");
-
-        if (categoriesGrid) {
-            if (categories.length === 0) {
-                const notice = document.createElement("p");
-                notice.className = "notice";
-                notice.textContent = "Категории готовятся к публикации.";
-                categoriesGrid.append(notice);
-            } else {
-                categories.forEach(category => {
-                    const button = document.createElement("button");
-                    button.className = "category-button";
-                    button.textContent = category.name;
-                    button.type = "button";
-                    button.addEventListener("click", () => {
-                        document.querySelectorAll(".category-button")
-                            .forEach(b => b.classList.remove("active"));
-                        button.classList.add("active");
-                    });
-                    categoriesGrid.append(button);
-                });
-            }
-        }
-
-
-        if (products.length === 0) {
-            message.textContent =
-                "Каталог ZPCH готовится к публикации. " +
-                "Проверенная информация о продукции появится позже.";
-            return;
-        }
-
-        message.textContent =
-            `Найдено позиций: ${products.length}`;
-
-        products.forEach(product => {
-            const card = document.createElement("article");
-            card.className = "product-card";
-
-            const info = document.createElement("div");
-            info.className = "product-info";
-
-            const title = document.createElement("h3");
-            title.className = "product-title";
-            title.textContent = product.name || "Без названия";
-
-            const description = document.createElement("p");
-            description.className = "product-description";
-            description.textContent = product.description || "";
-
-            info.append(title, description);
-            card.append(info);
-            grid.append(card);
-        });
-
-    } catch (error) {
-        message.textContent =
-            "Не удалось загрузить каталог. Попробуйте позже.";
-        console.error(error);
+  function updateMedia(container, product, variant) {
+    container.replaceChildren();
+    if (!variant.image) {
+      const empty = textEl("div", "photo-placeholder", "");
+      empty.append(
+        textEl("span", "placeholder-symbol", "▧"),
+        textEl("span", "placeholder-main", "Фото готовится"),
+        textEl("span", "placeholder-description", `Упаковка ${variant.label} ещё не добавлена`)
+      );
+      container.append(empty);
+      return;
     }
-}
+    const image = document.createElement("img");
+    image.className = "product-photo";
+    image.src = variant.image;
+    image.alt = `${product.name} — ${variant.label}, фотография упаковки`;
+    image.loading = "lazy";
+    image.decoding = "async";
+    image.addEventListener("error", () => {
+      // Отсутствующий файл никогда не заменяем фотографией другой дозировки.
+      container.replaceChildren(
+        textEl("div", "photo-placeholder", "Фотография временно недоступна")
+      );
+    }, { once: true });
+    container.append(image);
+  }
 
-document.addEventListener("DOMContentLoaded", loadProducts);
+  function makeProductCard(product) {
+    const variants = Array.isArray(product.variants) ? product.variants : [];
+    const card = document.createElement("article");
+    card.className = "product-card";
+    card.dataset.category = product.category || "single";
+    const media = textEl("div", "product-image", "");
+    const info = textEl("div", "product-info", "");
+    const title = textEl("h3", "product-title", product.name);
+    const description = textEl("p", "product-description", product.description || "");
+    info.append(title, description);
+
+    const variantDetails = textEl("div", "variant-details", "");
+    const compositionText = formatComposition(product.composition);
+    if (compositionText) {
+      info.append(textEl("p", "composition", `Состав: ${compositionText}`));
+    }
+    const variantsBlock = textEl("div", "variants", "");
+    if (variants.length > 1) {
+      const groupLabel = textEl("div", "variants-label", "Варианты упаковки");
+      const buttons = textEl("div", "variant-buttons", "");
+      variants.forEach((variant, i) => {
+        const button = textEl("button", "variant-button", variant.label);
+        button.type = "button";
+        button.setAttribute("aria-pressed", i === 0 ? "true" : "false");
+        if (i === 0) button.classList.add("active");
+        button.addEventListener("click", () => {
+          buttons.querySelectorAll("button").forEach(b => {
+            b.classList.remove("active");
+            b.setAttribute("aria-pressed", "false");
+          });
+          button.classList.add("active");
+          button.setAttribute("aria-pressed", "true");
+          selectVariant(product, variant, media, variantDetails);
+        });
+        buttons.append(button);
+      });
+      variantsBlock.append(groupLabel, buttons);
+    }
+    info.append(variantsBlock, variantDetails);
+    card.append(media, info);
+    if (variants.length) selectVariant(product, variants[0], media, variantDetails);
+    return card;
+  }
+
+  function selectVariant(product, variant, media, details) {
+    updateMedia(media, product, variant);
+    details.replaceChildren();
+    details.append(
+      textEl("span", "selected-dose", variant.label),
+      textEl("span", "packaging", variant.packaging || "Комплектация уточняется")
+    );
+  }
+
+  function matches(product) {
+    if (state.category !== "all" && product.category !== state.category) return false;
+    if (!state.search) return true;
+    const tokens = [
+      product.name, product.description,
+      ...(product.variants || []).flatMap(v => [v.label, v.packaging]),
+      ...(product.composition || []).map(c => c.name)
+    ];
+    const normalized = tokens.filter(Boolean).join(" ").toLocaleLowerCase("ru").replace(/\./g, ",");
+    return normalized.includes(state.search);
+  }
+
+  function updateResults() {
+    let shown = 0;
+    state.products.forEach(product => {
+      const visible = matches(product);
+      const card = cards.get(product.id);
+      if (card) card.hidden = !visible;
+      if (visible) shown++;
+    });
+    message.textContent = shown === 0 ? "Ничего не найдено" : `Показано: ${shown} из ${state.products.length}`;
+  }
+
+  function renderCategories(categories) {
+    categoryContainer.replaceChildren();
+    const list = Array.isArray(categories) && categories.length
+      ? categories : [{ id: "all", name: "Все товары" }];
+    list.forEach(category => {
+      const button = textEl("button", "category-button", category.name);
+      button.type = "button";
+      const active = category.id === state.category;
+      if (active) button.classList.add("active");
+      button.setAttribute("aria-pressed", active ? "true" : "false");
+      button.addEventListener("click", () => {
+        state.category = category.id;
+        categoryContainer.querySelectorAll("button").forEach(b => {
+          b.classList.remove("active");
+          b.setAttribute("aria-pressed", "false");
+        });
+        button.classList.add("active");
+        button.setAttribute("aria-pressed", "true");
+        updateResults();
+      });
+      categoryContainer.append(button);
+    });
+  }
+
+  async function loadProducts() {
+    try {
+      const response = await fetch("products.json", { cache: "no-cache" });
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      const data = await response.json();
+      const manufacturer = (data.manufacturers || []).find(item => item.id === "zpch");
+      if (!manufacturer) throw new Error("Производитель не найден");
+      state.products = manufacturer.products || [];
+      grid.replaceChildren();
+      state.products.forEach(product => {
+        const card = makeProductCard(product);
+        cards.set(product.id, card);
+        grid.append(card);
+      });
+      renderCategories(manufacturer.categories);
+      const params = new URLSearchParams(window.location.search);
+      searchInput.value = params.get("q") || "";
+      state.search = searchInput.value.trim().toLocaleLowerCase("ru").replace(/\./g, ",");
+      searchInput.addEventListener("input", () => {
+        state.search = searchInput.value.trim().toLocaleLowerCase("ru").replace(/\./g, ",");
+        updateResults();
+      });
+      updateResults();
+    } catch (error) {
+      message.textContent = "Не удалось загрузить каталог. Обнови страницу.";
+      console.error("PEPTARIUM catalog error:", error);
+    }
+  }
+
+  loadProducts();
+})();

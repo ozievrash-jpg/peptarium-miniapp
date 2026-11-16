@@ -3,8 +3,92 @@
     {
       "id": "zpch",
       "name": "ZPHC",
-      "products": [],
-      "categories": []
+      "categories": [
+        { "id": "all", "name": "Все товары" },
+        { "id": "single", "name": "Отдельные соединения" },
+        { "id": "mix", "name": "Смеси" }
+      ],
+      "products": [
+        {
+          "id": "bpc157",
+          "name": "BPC-157",
+          "category": "single",
+          "description": "Заводской набор ZPHC. По отдельным флаконам не представлен.",
+          "variants": [
+            { "id": "25mg", "label": "25 мг", "packaging": "5 флаконов × 5 мг", "image": "images/products/bpc-157-25mg.jpg" }
+          ]
+        },
+        {
+          "id": "tb500",
+          "name": "TB-500",
+          "category": "single",
+          "description": "Заводская упаковка ZPHC.",
+          "variants": [
+            { "id": "25mg", "label": "25 мг", "packaging": "5 флаконов × 5 мг", "image": "images/products/tb-500-25mg.webp" },
+            { "id": "20mg", "label": "20 мг", "packaging": "Комплектация уточняется" }
+          ]
+        },
+        {
+          "id": "hphcg",
+          "name": "HP-hCG",
+          "category": "single",
+          "description": "Заводская упаковка ZPHC.",
+          "variants": [
+            { "id": "5000iu", "label": "5000 МЕ", "packaging": "Заводская коробка", "image": "images/products/hp-hcg-5000iu.jpg" }
+          ]
+        },
+        {
+          "id": "tirzepatide",
+          "name": "Tirzepatide",
+          "category": "single",
+          "description": "Варианты комплектации могут отличаться. На фото показана выбранная дозировка.",
+          "variants": [
+            { "id": "37-5mg", "label": "37,5 мг", "packaging": "5 флаконов × 7,5 мг", "image": "images/products/tirzepatide-37-5mg.jpg" },
+            { "id": "50mg", "label": "50 мг", "packaging": "5 флаконов × 10 мг", "image": "images/products/tirzepatide-50mg.jpg" },
+            { "id": "60mg", "label": "60 мг", "packaging": "Заводская упаковка; состав комплекта уточняется" },
+            { "id": "150mg", "label": "150 мг", "packaging": "5 флаконов × 30 мг" }
+          ]
+        },
+        {
+          "id": "retatrutide",
+          "name": "Retatrutide",
+          "category": "single",
+          "description": "Фотографии отдельных вариантов будут добавлены позже.",
+          "variants": [
+            { "id": "40mg", "label": "40 мг", "packaging": "5 флаконов × 8 мг" },
+            { "id": "60mg", "label": "60 мг", "packaging": "5 флаконов × 12 мг" },
+            { "id": "80mg", "label": "80 мг", "packaging": "5 флаконов × 16 мг" },
+            { "id": "24mg", "label": "24 мг", "packaging": "Отдельный флакон" }
+          ]
+        },
+        {
+          "id": "glow-pro-mix",
+          "name": "GLOW PRO MIX",
+          "category": "mix",
+          "description": "Комбинированный состав; данные по маркировке.",
+          "composition": [
+            { "name": "GHK-Cu", "mg": 40 },
+            { "name": "TB-500", "mg": 10 },
+            { "name": "BPC-157", "mg": 10 }
+          ],
+          "variants": [
+            { "id": "60mg", "label": "60 мг", "packaging": "Состав: 40 + 10 + 10 мг" }
+          ]
+        },
+        {
+          "id": "ultra-rehab-mix",
+          "name": "ULTRA REHAB MIX",
+          "category": "mix",
+          "description": "Комбинированный состав; данные по маркировке.",
+          "composition": [
+            { "name": "TB-500", "mg": 10 },
+            { "name": "BPC-157", "mg": 10 }
+          ],
+          "variants": [
+            { "id": "20mg", "label": "20 мг", "packaging": "Состав: 10 + 10 мг" }
+          ]
+        }
+      ]
     }
   ]
 }

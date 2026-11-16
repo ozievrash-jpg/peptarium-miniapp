@@ -1,51 +1,37 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
-    <title>ZPHC | PEPTARIUM</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#071820">
+  <title>ZPHC | PEPTARIUM</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
-<header>
+  <header>
     <h1>PEPTARIUM</h1>
-    <div class="subtitle">
-        Каталог производителей и продукции
-    </div>
-</header>
-
-<main>
-    <a href="index.html" class="back-link">
-        ← Все производители
-    </a>
-
-    <section class="brand">
-        <h2>🧬 ZPHC</h2>
-        <p class="notice">
-            Каталог продукции производителя ZPHC.
-        </p>
+    <div class="subtitle">Каталог производителей и продукции</div>
+  </header>
+  <main>
+    <a href="index.html" class="back-link">← Все производители</a>
+    <section class="brand brand-intro">
+      <div class="brand-heading"><span class="brand-mark">🧬</span><h2>ZPHC</h2></div>
+      <p class="notice">Выбирай вариант товара, чтобы увидеть соответствующую фотографию и комплектацию. Если фото пока нет, мы не подставляем изображение другой дозировки.</p>
     </section>
-
-    
-
-    
-
-<section class="categories-section">
-    <h2>Категории продукции</h2>
-    <div id="categories-grid" class="categories-grid"></div>
-</section>
-
-<h2>Продукция</h2>
-<div id="products-grid" class="products-grid"></div>
-
-<p id="catalog-message" class="notice">
-    Загрузка каталога...
-</p>
-
-</main>
-
-<script src="app.js"></script>
+    <div class="search-box catalog-search">
+      <label class="sr-only" for="catalog-search-input">Поиск по товарам</label>
+      <input type="search" id="catalog-search-input" placeholder="Поиск по названию или дозировке…" autocomplete="off">
+    </div>
+    <section class="categories-section" aria-label="Категории продукции">
+      <div id="categories-grid" class="categories-grid"></div>
+    </section>
+    <div class="catalog-heading">
+      <h2>Продукция</h2>
+      <span id="catalog-message" class="catalog-count" role="status" aria-live="polite">Загрузка…</span>
+    </div>
+    <div id="products-grid" class="products-grid"></div>
+    <p class="footnote">Характеристики указаны для ознакомления по маркировке упаковок; наличие и комплектация уточняются отдельно. Не является инструкцией по применению.</p>
+  </main>
+  <script src="app.js" defer></script>
 </body>
 </html>
