@@ -157,7 +157,7 @@
       const data = await response.json();
       const manufacturer = (data.manufacturers || []).find(item => item.id === "zpch");
       if (!manufacturer) throw new Error("Производитель не найден");
-      state.products = manufacturer.products || [];
+      state.products = (manufacturer.products || []).filter(product => product.hidden !== true);
       grid.replaceChildren();
       state.products.forEach(product => {
         const card = makeProductCard(product);
