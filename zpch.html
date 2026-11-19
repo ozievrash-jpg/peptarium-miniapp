@@ -8,9 +8,16 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <header>
-    <h1>PEPTARIUM</h1>
-    <div class="subtitle">Каталог производителей и продукции</div>
+  <header class="site-header">
+    <div class="site-header-inner">
+      <div class="site-title">
+        <h1>PEPTARIUM</h1>
+        <div class="subtitle">Каталог производителей и продукции</div>
+      </div>
+      <button type="button" id="cart-toggle" class="cart-toggle" aria-label="Корзина" aria-haspopup="dialog" aria-controls="peptarium-cart-dialog" aria-expanded="false">
+        <span aria-hidden="true">🛒</span><span>Корзина</span><span id="cart-count" class="cart-count">0</span>
+      </button>
+    </div>
   </header>
   <main>
     <a href="index.html" class="back-link">← Все производители</a>
@@ -32,6 +39,7 @@
     <div id="products-grid" class="products-grid"></div>
     <p class="footnote">Характеристики указаны для ознакомления по маркировке упаковок; наличие и комплектация уточняются отдельно. Не является инструкцией по применению.</p>
   </main>
+  <script src="cart.js" defer></script>
   <script src="app.js" defer></script>
 </body>
 </html>
