@@ -28,7 +28,8 @@
               "id": "25mg",
               "label": "25 мг",
               "packaging": "5 флаконов × 5 мг",
-              "image": "images/products/bpc-157-25mg.jpg"
+              "image": "images/products/bpc-157-25mg.jpg",
+              "price_rub": 9500
             }
           ]
         },

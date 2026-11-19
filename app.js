@@ -82,25 +82,43 @@
           });
           button.classList.add("active");
           button.setAttribute("aria-pressed", "true");
-          selectVariant(product, variant, media, variantDetails);
+          selectVariant(product, variant, media, variantDetails, price, addButton);
         });
         buttons.append(button);
       });
       variantsBlock.append(groupLabel, buttons);
     }
-    info.append(variantsBlock, variantDetails);
+    const price = textEl("div", "product-price", "Цена уточняется");
+    const addButton = textEl("button", "add-to-cart", "Цена не указана");
+    addButton.type = "button";
+    addButton.disabled = true;
+    info.append(variantsBlock, variantDetails, price, addButton);
     card.append(media, info);
-    if (variants.length) selectVariant(product, variants[0], media, variantDetails);
+    if (variants.length) selectVariant(product, variants[0], media, variantDetails, price, addButton);
     return card;
   }
 
-  function selectVariant(product, variant, media, details) {
+  function selectVariant(product, variant, media, details, price, addButton) {
     updateMedia(media, product, variant);
     details.replaceChildren();
     details.append(
       textEl("span", "selected-dose", variant.label),
       textEl("span", "packaging", variant.packaging || "Комплектация уточняется")
     );
+    const cart = window.PeptariumCart;
+    const hasPrice = cart && cart.isPrice(variant.price_rub);
+    price.textContent = hasPrice ? cart.rub(variant.price_rub) : "Цена уточняется";
+    addButton.disabled = !hasPrice;
+    addButton.dataset.variant = variant.id;
+    addButton.textContent = hasPrice ? "🛒 В корзину" : "Цена не указана";
+    addButton.onclick = hasPrice ? () => {
+      if (cart.add(product.id, variant.id)) {
+        addButton.textContent = "✓ Добавлено";
+        window.setTimeout(() => {
+          if (addButton.dataset.variant === variant.id) addButton.textContent = "🛒 В корзину";
+        }, 1100);
+      }
+    } : null;
   }
 
   function matches(product) {
@@ -155,6 +173,7 @@
       const response = await fetch("products.json", { cache: "no-cache" });
       if (!response.ok) throw new Error(`HTTP ${response.status}`);
       const data = await response.json();
+      if (window.PeptariumCart) window.PeptariumCart.setCatalog(data);
       const manufacturer = (data.manufacturers || []).find(item => item.id === "zpch");
       if (!manufacturer) throw new Error("Производитель не найден");
       state.products = (manufacturer.products || []).filter(product => product.hidden !== true);
